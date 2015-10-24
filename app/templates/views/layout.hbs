@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/main.css"/>
+</head>
+<body id="pjax-container">
+{{{body}}}
+<script src="http://localhost:8000/static/js/sea.js?nowrap"></script>
+<script>
+    seajs.config({
+        base: 'http://localhost:8000/'
+    });
+    seajs.use('public/js/index');
+
+    console.log('start');
+</script>
+</body>
+</html>
