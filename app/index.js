@@ -1,21 +1,28 @@
 var util = require('util');
 var path = require('path');
 var yosay = require('yosay');
+var chalk = require('chalk');
+var dir = require('check-dir');
+var whoami = require('whoami');
 var yeoman = require('yeoman-generator');
 
 module.exports = Yoapp;
 
 function Yoapp(args, options, config) {
     yeoman.generators.Base.apply(this, arguments);
-    this.version = args[0] || '1.0';
-    this.cwd = options.env.cwd;
-    this.componentName = path.basename(this.cwd);
+
+    //this.cwd = options.env.cwd;
 
     this.on('end', function () {
         this.installDependencies({
-            bower: false
+            bower: false,
+            skipMessage: true
         });
-        console.log("依赖安装完成");
+        console.log(
+            chalk.red("-------------")+'\n'+
+            chalk.red("Yoapp创建完成")+'\n'+
+            chalk.red("-------------")+'\n'
+        );
     })
 }
 
@@ -26,10 +33,19 @@ var app = Yoapp.prototype;
 
 /*
  *@Description: 显示欢迎信息
- *@Tip: askFor非内置函数，名字可以自定义，代码会按顺序依次执行
+ *@Tip: checkDir非内置函数，名字可以自定义，代码会按顺序依次执行
  */
+app.checkDir = function () {
+
+    if (dir.checkDirSync(process.cwd())) {
+        console.log(chalk.red('文件夹非空'));
+        return;
+    }
+};
+
 app.askFor = function () {
-    console.log(yosay('Hello Yoapp'));
+
+    console.log(yosay(chalk.white('创建一个Yoapp')));
 };
 
 app.askAuthor = function () {
@@ -37,8 +53,9 @@ app.askAuthor = function () {
     var cb = this.async();
 
     var authorAnswer = [
-        {name: 'author', message: 'Your Name?', default: ''},
-        {name: 'email', message: 'Your Email?', default: ''},
+        {name: 'name', message: 'name:', default: path.basename(process.cwd())},
+        {name: 'author', message: 'author:', default: whoami},
+        {name: 'version', message: 'version:', default: '0.0.1'},
         {
             type: 'checkbox',
             name: 'spm',
@@ -61,8 +78,9 @@ app.askAuthor = function () {
             return spm.join().indexOf(val) !== -1;
         }
 
+        this.name = props.name;
         this.author = props.author;
-        this.email = props.email;
+        this.version = props.version;
 
         this.zepto = hasPkg('zepto');
         this.swiper = hasPkg('swiper');
@@ -123,4 +141,3 @@ app.install = function () {
         });
     }
 };
-

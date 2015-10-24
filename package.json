@@ -1,8 +1,11 @@
 {
-  "name": "generator-Yoapp",
-  "version": "0.0.1",
-  "dependencies": {
-    "yeoman-generator": "^0.21.1",
-    "yosay": "^1.0.5"
-  }
+    "name": "generator-yoapp",
+    "version": "0.0.1",
+    "dependencies": {
+        "chalk": "^1.1.1",
+        "check-dir": "0.0.1",
+        "whoami": "0.0.3",
+        "yeoman-generator": "^0.21.1",
+        "yosay": "^1.0.5"
+    }
 }
