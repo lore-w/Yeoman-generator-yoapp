@@ -1,7 +1,8 @@
 /*
- * @description: 服务端入口文件
- * @author: lore-w
- * @date: 2015/10/1
+ *@description: 服务端入口文件
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
  */
 
 var express = require('express'),

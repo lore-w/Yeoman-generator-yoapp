@@ -8,7 +8,8 @@ var path = require('path');
 var yosay = require('yosay');
 var chalk = require('chalk');
 var dir = require('check-dir');
-var whoami = require('whoami');
+var whoami = require('who-ami');
+var dateformat = require('dateformat');
 var yeoman = require('yeoman-generator');
 
 module.exports = Yoapp;
@@ -70,7 +71,8 @@ app.askAuthor = function () {
 
     var authorAnswer = [
         {name: 'name', message: 'name:', default: path.basename(process.cwd())},
-        {name: 'author', message: 'author:', default: whoami},
+        {name: 'author', message: 'author:', default: whoami.name},
+        {name: 'email', message: 'email:', default: whoami.email},
         {name: 'version', message: 'version:', default: '0.0.1'},
         {
             type: 'checkbox',
@@ -96,7 +98,9 @@ app.askAuthor = function () {
 
         this.name = props.name;
         this.author = props.author;
+        this.email = props.email;
         this.version = props.version;
+        this.time = dateformat(new Date(), "fullDate");
 
         this.zepto = hasPkg('zepto');
         this.swiper = hasPkg('swiper');
@@ -120,9 +124,11 @@ app.duplicate = function () {
     this.template('public/', 'public/');
     this.template('router/', 'router/');
     this.template('views/', 'views/');
+    this.template('.package.json', 'package.json');
     this.template('_.gitignore', '.gitignore');
-    this.template('_package.json', 'package.json');
     this.template('app.js', 'app.js');
+    this.template('config.rb', 'config.rb');
+    this.template('index.js', 'index.js');
     this.template('README.md', 'README.md');
 };
 

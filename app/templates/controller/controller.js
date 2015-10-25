@@ -1,14 +1,10 @@
 /*
- * @description: 控制器文件
- * @author: lore-w
- * @time: 2015/10/1
+ *@description: 控制器文件
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
  */
 
-exports.home = function (req, res) {
-    res.renderPjax('index', { title: 'Pjax' });
-};
-
-exports.page = function (req, res) {
-    console.log(req);
-    res.renderPjax('page', { page: req.params.id });
+exports.index = function (req, res) {
+    res.render('index', { title: 'demo' });
 };

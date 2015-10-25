@@ -1,0 +1,19 @@
+@charset "utf-8";
+/*
+ *@description: 公用样式
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
+ */
+@import "compass";
+@import "sprite";
+@import "variable";
+
+@include global-reset();
+
+/*@include font-face("helveticaneue-light", font-files(
+                "helveticaneue-light.eot",
+                "helveticaneue-light.svg",
+                "helveticaneue-light.ttf",
+                "helveticaneue-light.woff",
+                "helveticaneue-light.woff2"));*/
