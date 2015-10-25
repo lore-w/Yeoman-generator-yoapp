@@ -1,3 +1,8 @@
+/*
+ *@Description: Yeoman生成器
+ *@Author: lore-w
+ *@Email: metro-cpu@hotmail.com
+ */
 var util = require('util');
 var path = require('path');
 var yosay = require('yosay');
@@ -14,15 +19,18 @@ function Yoapp(args, options, config) {
     //this.cwd = options.env.cwd;
 
     this.on('end', function () {
-        this.installDependencies({
-            bower: false,
-            skipMessage: true
-        });
-        console.log(
-            chalk.red("-------------")+'\n'+
-            chalk.red("Yoapp创建完成")+'\n'+
-            chalk.red("-------------")+'\n'
-        );
+
+        if (!this.isEmpt) {
+            this.installDependencies({
+                bower: false,
+                skipMessage: true
+            });
+            console.log(
+                    chalk.red("-------------")+'\n'+
+                    chalk.red("Yoapp创建完成")+'\n'+
+                    chalk.red("-------------")+'\n'
+            );
+        }
     })
 }
 
@@ -39,16 +47,24 @@ app.checkDir = function () {
 
     if (dir.checkDirSync(process.cwd())) {
         console.log(chalk.red('文件夹非空'));
-        return;
+        this.isEmpt = true;
     }
 };
 
 app.askFor = function () {
 
+    if (this.isEmpt) {
+        return;
+    }
+
     console.log(yosay(chalk.white('创建一个Yoapp')));
 };
 
 app.askAuthor = function () {
+
+    if (this.isEmpt) {
+        return;
+    }
 
     var cb = this.async();
 
@@ -95,6 +111,11 @@ app.askAuthor = function () {
 
 //拷贝文件
 app.duplicate = function () {
+
+    if (this.isEmpt) {
+        return;
+    }
+
     this.template('controller/', 'controller/');
     this.template('public/', 'public/');
     this.template('router/', 'router/');
@@ -108,6 +129,10 @@ app.duplicate = function () {
 //安装依赖
 
 app.install = function () {
+
+    if (this.isEmpt) {
+        return;
+    }
 
     var installArr = [];
 
