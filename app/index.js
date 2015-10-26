@@ -124,12 +124,15 @@ app.duplicate = function () {
     this.template('public/', 'public/');
     this.template('router/', 'router/');
     this.template('views/', 'views/');
-    this.template('.package.json', 'package.json');
-    this.template('_.gitignore', '.gitignore');
+
     this.template('app.js', 'app.js');
     this.template('config.rb', 'config.rb');
-    this.template('index.js', 'index.js');
+    this.template('gulpfile.js', 'gulpfile.js');
     this.template('README.md', 'README.md');
+
+    this.template('~gitignore', '.gitignore');
+    this.template('~index.js', 'index.js');
+    this.template('~package.json', 'package.json');
 };
 
 //安装依赖
