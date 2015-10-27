@@ -27,9 +27,7 @@ function Yoapp(args, options, config) {
                 skipMessage: true
             });
             console.log(
-                    chalk.red("-------------")+'\n'+
-                    chalk.red("Yoapp创建完成")+'\n'+
-                    chalk.red("-------------")+'\n'
+                    chalk.red("Yoapp创建完成~~")+'\n'
             );
         }
     })
@@ -120,15 +118,15 @@ app.duplicate = function () {
         return;
     }
 
-    this.template('controller/', 'controller/');
-    this.template('public/', 'public/');
-    this.template('router/', 'router/');
-    this.template('views/', 'views/');
+    this.template('controller/');
+    this.template('public/');
+    this.template('router/');
+    this.template('views/');
 
-    this.template('app.js', 'app.js');
-    this.template('config.rb', 'config.rb');
-    this.template('gulpfile.js', 'gulpfile.js');
-    this.template('README.md', 'README.md');
+    this.template('app.js');
+    this.template('config.rb');
+    this.template('gulpfile.js');
+    this.template('README.md');
 
     this.template('~gitignore', '.gitignore');
     this.template('~index.js', 'index.js');

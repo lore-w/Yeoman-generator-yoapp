@@ -1,6 +1,6 @@
 {
     "name": "generator-yoapp",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "dependencies": {
         "chalk": "^1.1.1",
         "check-dir": "0.0.1",
