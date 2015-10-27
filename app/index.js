@@ -129,7 +129,7 @@ app.duplicate = function () {
     this.template('README.md');
 
     this.template('~gitignore', '.gitignore');
-    this.template('~index.js', 'index.js');
+    this.template('~indexjs', 'index.js');
     this.template('~package.json', 'package.json');
 };
 
