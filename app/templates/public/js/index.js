@@ -4,3 +4,5 @@
  *@email: <%= email%>
  *@time: <%= time%>
  */
+
+console.log('Hello Yoapp');

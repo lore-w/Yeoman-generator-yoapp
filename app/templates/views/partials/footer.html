@@ -1,6 +1,12 @@
 <script src="http://localhost:8000/static/js/sea.js?nowrap"></script>
 <script>
     seajs.config({
-        base: 'http://localhost:8000/public/'
+        base: 'http://localhost:8000/'
     })
 </script>
+
+{{# jsPath}}
+<script>
+    seajs.use({{{.}}});
+</script>
+{{/ jsPath}}

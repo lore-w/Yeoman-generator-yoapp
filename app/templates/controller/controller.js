@@ -11,7 +11,8 @@ exports.index = function (req, res) {
 
     res.render('pages/index', {
         data: data.index(),
-        layout: '../views/layout/layout'
+        layout: '../views/layout/layout',
+        jsPath: '["public/js/index"]'
     });
 
 };
