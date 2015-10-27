@@ -8,6 +8,8 @@
 var controller = require('../controller/controller');
 
 module.exports = function (app) {
+
   // 首页
-  app.get('/', controller.home);
+  app.get('/', controller.index);
+
 };

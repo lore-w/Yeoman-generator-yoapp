@@ -5,6 +5,13 @@
  *@time: <%= time%>
  */
 
+var data = require('../public/data/data');
+
 exports.index = function (req, res) {
-    res.render('index', { title: 'demo' });
+
+    res.render('pages/index', {
+        data: data.index(),
+        layout: '../views/layout/layout'
+    });
+
 };
