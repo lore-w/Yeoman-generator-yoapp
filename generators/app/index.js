@@ -113,7 +113,7 @@ module.exports = Generator.extend({
             this.destinationPath('.babelrc')
         );
         this.fs.copyTpl(
-            this.templatePath('html/README.md'),
+            this.templatePath('README.md'),
             this.destinationPath('README.md'),
             this
         );

@@ -5,10 +5,7 @@
  *@time: <%= time %>
  */
 
-var webpack = require("webpack-stream");
 var path = require('path');
-
-var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 var ROOT_PATH = path.resolve(__dirname);
 
@@ -34,7 +31,7 @@ var config = {
         }]
     },
     plugins: [
-        new CommonsChunkPlugin('vendor', 'vendor.bundle.js')
+        //new CommonsChunkPlugin('vendor', 'vendor.bundle.js')
     ]
 };
 
