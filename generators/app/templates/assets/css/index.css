@@ -1,0 +1,20 @@
+@charset "utf-8";
+/*！
+ *@description: 样式入口文件
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
+ */
+
+//插件
+//@import "./plugin/_demo";
+
+@import "./base/_variable";
+@import "./base/_common";
+
+/*组件*/
+@import "./partials/_header";
+@import "./partials/_footer";
+
+/*页面*/
+@import "./pages/_index";

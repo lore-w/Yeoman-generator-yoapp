@@ -1,0 +1,9 @@
+@charset "utf-8";
+/*
+ *@description: 公用样式
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
+ */
+
+@import "./_variable";

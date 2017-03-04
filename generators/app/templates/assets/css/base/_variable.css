@@ -1,0 +1,11 @@
+@charset "utf-8";
+/*
+ *@description: 变量
+ *@author: <%= author%>
+ *@email: <%= email%>
+ *@time: <%= time%>
+ */
+
+/*font*/
+$font-color: #000;
+$font-default: "STHeiti","Helvetica","Arial";
