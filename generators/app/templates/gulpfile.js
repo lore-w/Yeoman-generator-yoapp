@@ -341,7 +341,7 @@ gulp.task('clean:dist', function () {
 //dev
 gulp.task('dev', function () {
 
-    runSequence(['cp', 'js', 'css'], 'replace', ['connect', 'watch', 'open']);
+    runSequence('clean:dist', ['js', 'css', 'cp'], 'replace', ['connect', 'watch', 'open']);
 });
 // build
 gulp.task('build', function () {
