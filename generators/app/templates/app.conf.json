@@ -1,0 +1,20 @@
+{
+    "key": ["A", "B", "C"],
+    "shareUrl": {
+        "dev": "localhost",
+        "pre": "xxxxx.com",
+        "prd": "lore-w.com"
+    },
+    "API": {
+        "userList": {
+            "dev": "dev.requestList.do",
+            "pre": "pre.requestList.do",
+            "prd": "prd.requestList.do"
+        },
+        "usetDetail": {
+            "dev": "dev.requestDetail.do",
+            "pre": "pre.requestDetail.do",
+            "prd": "prd.requestDetail.do"
+        }
+    }
+}

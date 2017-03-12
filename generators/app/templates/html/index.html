@@ -7,35 +7,32 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0 user-scalable=no">
     <% } %>
+
     <!-- inject:css -->
-    <link rel="stylesheet" href="./assets/index.css">
     <!-- endinject -->
+
     <% if (isMobile) { %>
-    <script>
+    <script type="text/javascript">
         (function (doc, win) {
             var docEl = doc.documentElement;
             var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
             var setFontSize = function () {
 
-                // 获取屏幕分辨率
                 var screenWidth = screen.width,
                     screenHeight = screen.height;
 
-                // iphone 4s高度960 5s 1136
                 if (screenWidth <= 320 && screenHeight <= 480) {
-                    docEl.style.fontSize = '18px';
+                    docEl.style.fontSize = '18px';// iphone 4s高度960 5s 1136
                 }
 
-                // 5 6 7
                 if (screenWidth >= 320 && screenHeight >= 568) {
-                    docEl.style.fontSize = 25 * (screenWidth / 375) + 'px';
+                    docEl.style.fontSize = 25 * (screenWidth / 375) + 'px';// 5 6 7
                 }
-                // ipad pc
+
                 if (screenWidth > 414) {
-                    docEl.style.fontSize = '27.6px';
+                    docEl.style.fontSize = '27.6px';// ipad pc
                 }
             };
-
             if (!doc.addEventListener) {
                 return;
             }
@@ -47,8 +44,13 @@
 </head>
 <body>
 
+<div id="Yeoman">
+    Hello Yeoman
+</div>
+
+<!-- inject:vendors:js -->
+<!-- endinject -->
 <!-- inject:js -->
-<script src="./assets/all.js"></script>
 <!-- endinject -->
 </body>
 </html>

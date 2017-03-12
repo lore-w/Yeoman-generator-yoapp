@@ -19,12 +19,12 @@ module.exports = Generator.extend({
         Generator.apply(this, arguments);
 
         this.option('skip-welcome-message', {
-            desc: 'Skips the welcome message',
+            desc: 'Skip the welcome message',
             type: Boolean
         });
 
-        this.option('skip-install-message', {
-            desc: 'Skips the message after the installation of dependencies',
+        this.option('skip-install', {
+            desc: 'Skip install the dependencies',
             type: Boolean
         });
     },
@@ -62,22 +62,77 @@ module.exports = Generator.extend({
         }, {
             name: 'version',
             message: 'Version:',
-            default: '0.0.1'
+            default: '1.0.0'
         }, {
             type: 'confirm',
             name: 'isMobile',
             message: 'This is a mobile app?',
             default: true
+        }, {
+            type: 'checkbox',
+            name: 'lib',
+            message: 'You want to install?',
+            choices: [{
+                name: 'jquery',
+                value: 'jquery',
+                checked: true
+            }, {
+                name: 'hammerjs',
+                value: 'hammerjs',
+                checked: false
+            }, {
+                name: 'lodash',
+                value: 'lodash',
+                checked: false
+            }, {
+                name: 'mustache',
+                value: 'mustache',
+                checked: false
+            }]
         }];
 
         return this.prompt(userInput).then(function (answers) {
 
+            var lib = answers.lib;
+
+            function hasLib (name) {
+
+                return lib.join().indexOf(name) !== -1;
+            }
             this.name = answers.name;
             this.author = answers.author;
             this.email = answers.email;
             this.version = answers.version;
             this.time = dateformat(new Date(), "fullDate");
             this.isMobile = answers.isMobile;
+
+            this.jquery = hasLib('jquery');
+            this.hammerjs = hasLib('hammerjs');
+            this.lodash = hasLib('lodash');
+            this.mustache = hasLib('mustache');
+
+
+            var selectList = ['jquery', 'hammerjs', 'lodash', 'mustache'],
+                i,
+                str = [],
+                listLen = selectList.length;
+
+            for (i = 0; i < listLen; i++) {
+
+                if (hasLib(selectList[i])) {
+
+                    /*if (i !== listLen) {
+                        str = str + "'" + selectList[i] + "',";
+                    } else {
+                        str = str + "'" + selectList[i] + "']";
+                    }*/
+
+                    str.push(selectList[i]);
+                    this.hasLibs = true;
+                }
+            }
+
+            this.installList = str;
 
         }.bind(this));
     },
@@ -99,12 +154,12 @@ module.exports = Generator.extend({
             this
         );
         this.fs.copyTpl(
-            this.templatePath('package.json'),
+            this.templatePath('package.json.html'),
             this.destinationPath('package.json'),
             this
         );
         this.fs.copyTpl(
-            this.templatePath('webpack.config.js'),
+            this.templatePath('webpack.config.js.html'),
             this.destinationPath('webpack.config.js'),
             this
         );
@@ -126,15 +181,37 @@ module.exports = Generator.extend({
             this.destinationPath('.editorconfig')
         );
 
+        this.fs.copy(
+            this.templatePath('app.conf.json'),
+            this.destinationPath('app.conf.json')
+        );
+        this.fs.copyTpl(
+            this.templatePath('index.js.html'),
+            this.destinationPath('app/javascript/index.js'),
+            this
+        );
         this.sourceRoot(path.join(__dirname, 'templates', 'assets'));
         this.fs.copyTpl(
             this.templatePath('.'),
             this.destinationPath('app'),
             this
         );
-        mkdirp('app/javascript/lib');
         mkdirp('app/images');
         mkdirp('app/fonts');
+    },
+    install: function () {
+        if (this.notEmpty) {
+
+            return;
+        }
+
+        if (!this.options['skip-install']) {
+
+            this.npmInstall(function () {
+
+                this.log(chalk.green("NPM INSTALL SUCCESS") + '\n');
+            });
+        }
     },
     end: function () {
 

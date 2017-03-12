@@ -5,6 +5,7 @@
  *@time: <%= time %>
  */
 
+var webpack = require("webpack");
 var path = require('path');
 
 var ROOT_PATH = path.resolve(__dirname);
@@ -12,7 +13,12 @@ var ROOT_PATH = path.resolve(__dirname);
 var config = {
     //watch: true,
     entry: {
-        vendors: ['jquery']
+        vendors: [<% if (hammerjs) { %>
+        "hammerjs",<% } %><% if (jquery) { %>
+        "jquery",<% } %><% if (lodash) { %>
+        "lodash",<% } %><% if (mustache) { %>
+        "mustache"<% } %>
+        ]
     },
     output: {
         path: '',
@@ -31,7 +37,17 @@ var config = {
         }]
     },
     plugins: [
-        //new CommonsChunkPlugin('vendor', 'vendor.bundle.js')
+        <% if (hasLibs) { %>
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendors'
+        })<% } %><% if (jquery) { %>,
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            'window.$': 'jquery',
+        })
+        <% } %>
     ]
 };
 

@@ -1,6 +1,8 @@
 {
     "name": "generator-yoapp",
-    "version": "1.1.1",
+    "version": "1.1.2",
+    "author": "Lore-w",
+    "email": "metro-cpu@hotmail.com",
     "dependencies": {
         "chalk": "^1.1.1",
         "check-dir": "0.0.1",
