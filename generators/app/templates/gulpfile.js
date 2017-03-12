@@ -264,8 +264,7 @@ gulp.task('css', ['postcss'], function () {
 gulp.task('cp:html', function () {
 
     return gulp.src([path.resolve(APP_PATH, '*.html')])
-        .pipe(gulp.dest(path.resolve(DIST_PATH)))
-        .pipe(connect.reload());
+        .pipe(gulp.dest(path.resolve(DIST_PATH)));
 });
 gulp.task('cp:fonts', function () {
 
@@ -323,7 +322,8 @@ gulp.task('replace', function () {
                 }
             }
         }
-    )).pipe(gulp.dest(DIST_PATH));
+    )).pipe(gulp.dest(DIST_PATH))
+    .pipe(connect.reload());
 });
 
 // html change
