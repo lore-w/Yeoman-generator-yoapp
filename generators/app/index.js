@@ -110,29 +110,20 @@ module.exports = Generator.extend({
             this.hammerjs = hasLib('hammerjs');
             this.lodash = hasLib('lodash');
             this.mustache = hasLib('mustache');
+            this.hasLibs = false;
 
 
             var selectList = ['jquery', 'hammerjs', 'lodash', 'mustache'],
-                i,
-                str = [],
-                listLen = selectList.length;
+                listLen = selectList.length,
+                i;
 
             for (i = 0; i < listLen; i++) {
 
                 if (hasLib(selectList[i])) {
 
-                    /*if (i !== listLen) {
-                        str = str + "'" + selectList[i] + "',";
-                    } else {
-                        str = str + "'" + selectList[i] + "']";
-                    }*/
-
-                    str.push(selectList[i]);
                     this.hasLibs = true;
                 }
             }
-
-            this.installList = str;
 
         }.bind(this));
     },

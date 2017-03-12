@@ -11,14 +11,13 @@ var path = require('path');
 var ROOT_PATH = path.resolve(__dirname);
 
 var config = {
-    //watch: true,
-    entry: {
-        vendors: [<% if (hammerjs) { %>
+    entry: {<% if (hasLibs) { %>
+        vendors: [<% } %><% if (hammerjs) { %>
         "hammerjs",<% } %><% if (jquery) { %>
         "jquery",<% } %><% if (lodash) { %>
         "lodash",<% } %><% if (mustache) { %>
-        "mustache"<% } %>
-        ]
+        "mustache"<% } %><% if (hasLibs) { %>
+        ]<% } %>
     },
     output: {
         path: '',

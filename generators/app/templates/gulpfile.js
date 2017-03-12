@@ -346,7 +346,7 @@ gulp.task('dev', function () {
 // build
 gulp.task('build', function () {
 
-    runSequence('clean:dist', ['js', 'css', 'cp'], 'replace');
+    runSequence('clean:dist', ['js', 'css', 'cp'], 'replace', 'clean:js');
 });
 
 // watch

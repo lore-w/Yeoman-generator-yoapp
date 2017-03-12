@@ -9,7 +9,6 @@ import CONF from './commons/conf';
 import Service from './commons/service';
 
 <% if (jquery) { %>
-var $ = require('jquery');
 require("imports-loader?$=jquery!./lib/jquery.plugin.demo.js");
 $.sayHello();
 <% } %>
