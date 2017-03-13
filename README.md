@@ -27,8 +27,8 @@ $ gulp
 以开发模式启动项目服务
 
 ### 可配置选项
-+ --skip-welcome-message 跳过项目初始化前的大胡子欢迎信息
-+ --skip-install 只初始化项目，跳过npm package安装
++ `--skip-welcome-message` 跳过项目初始化前的大胡子欢迎信息
++ `--skip-install` 只初始化项目，跳过npm package安装
 
 + Name 项目名称，默认读取当前的文件夹名命名
 + Author 项目的作者，如果本机有安装git默认读取git的user.name
@@ -62,7 +62,7 @@ $ gulp
 + 雪碧图//TODO
 
 ### PostCSS插件列表及相关文档
-+[PostCSS](https://www.npmjs.com/package/postcss)
-+[PreCSS](https://www.npmjs.com/package/precss)
-+[autoprefixer](https://www.npmjs.com/package/autoprefixer)
-+[postcss-assets](https://www.npmjs.com/package/postcss-assets)
++ [PostCSS](https://www.npmjs.com/package/postcss)
++ [PreCSS](https://www.npmjs.com/package/precss)
++ [autoprefixer](https://www.npmjs.com/package/autoprefixer)
++ [postcss-assets](https://www.npmjs.com/package/postcss-assets)
