@@ -10,6 +10,6 @@ import Service from './commons/service';
 
 <% if (jquery) { %>
 require("imports-loader?$=jquery!./lib/jquery.plugin.demo.js");
-$.sayHello();
+$('#demo').sayHello();
 <% } %>
 Service.demo();

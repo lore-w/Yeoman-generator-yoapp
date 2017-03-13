@@ -196,11 +196,16 @@ module.exports = Generator.extend({
             return;
         }
 
+        var _this = this;
+
         if (!this.options['skip-install']) {
 
-            this.npmInstall(function () {
-
-                this.log(chalk.green("NPM INSTALL SUCCESS") + '\n');
+            this.installDependencies({
+                bower: false,
+                npm: true,
+                callback: function () {
+                    _this.log(chalk.green("NPM INSTALL SUCCESS") + '\n');
+                }
             });
         }
     },
@@ -211,6 +216,6 @@ module.exports = Generator.extend({
             return;
         }
 
-        this.log(chalk.green("YOAPP INIT DONE") + '\n');
+        this.log(yosay(chalk.green('\'Hey~\' YOAPP INIT DONE')));
     }
 });
