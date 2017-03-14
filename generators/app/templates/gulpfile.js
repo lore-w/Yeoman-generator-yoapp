@@ -4,7 +4,7 @@
  *@email: <%= email %>
  *@time: <%= time %>
  */
-
+"use strict";
 let fs = require('fs'),
     os = require('os'),
     path = require('path'),

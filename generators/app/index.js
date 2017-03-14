@@ -47,10 +47,13 @@ module.exports = Generator.extend({
             this.log(yosay(chalk.green('\'Hello~\' I include Wepack、PostCss and a gulpfile to build your app')));
         }
 
+        var regDetection = new RegExp("[\\u4E00-\\u9FFF]+","g"),
+            floderName = path.basename(process.cwd());
+
         var userInput = [{
             name: 'name',
             message: 'Name:',
-            default: path.basename(process.cwd())
+            default: regDetection.test(floderName) ? 'demo' : floderName
         }, {
             name: 'author',
             message: 'Author:',

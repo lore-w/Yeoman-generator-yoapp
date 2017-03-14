@@ -5,12 +5,13 @@
  *@time: <%= time %>
  */
 
-var webpack = require("webpack");
-var path = require('path');
+"use strict";
+let webpack = require("webpack");
+let path = require('path');
 
-var ROOT_PATH = path.resolve(__dirname);
+let ROOT_PATH = path.resolve(__dirname);
 
-var config = {
+let config = {
     entry: {<% if (hasLibs) { %>
         vendors: [<% } %><% if (hammerjs) { %>
         "hammerjs",<% } %><% if (jquery) { %>
