@@ -106,7 +106,7 @@ module.exports = Generator.extend({
             this.author = answers.author;
             this.email = answers.email;
             this.version = answers.version;
-            this.time = dateformat(new Date(), "fullDate");
+            this.time = dateformat(new Date(), "yyyy/mm/dd HH:MM:ss");
             this.isMobile = answers.isMobile;
 
             this.jquery = hasLib('jquery');
