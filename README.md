@@ -28,7 +28,7 @@ $ gulp
 dev mode
 
 ```
-$gulp --evn=prd
+$ gulp --evn=prd
 ```
 prd mode
 
@@ -51,19 +51,18 @@ show help
 + LiveReload
 
 ### POSTCSS EXAMPLE
-支持如下：
-+ base64`background: inline('demo.png')`
-+ 获取图片宽高`width('demo.png')` or `width('demo.png', 2)`
-+ for`@for $i from 1 to 3 {}`
-+ each`@each $icon in (foo, bar, baz) {}`
++ base64 `background: inline('demo.png')`
++ 获取图片宽高 `width('demo.png')` or `width('demo.png', 2)`
++ for `@for $i from 1 to 3 {}`
++ each `@each $icon in (foo, bar, baz) {}`
 + 嵌套
-+ 变量`$blue: #056ef0`
++ 变量 `$blue: #056ef0`
 + mixin
-+ 动态图片路径(hash)`background: resolve('demo.png')`
++ 动态图片路径(hash) `background: resolve('demo.png')`
 + 浏览器兼容性前缀
 + 图片精灵//TODO
 + @at-root
-+ Property Lookup`.heading {margin: 20px;padding: @margin;}`
++ Property Lookup `.heading {margin: 20px;padding: @margin;}`
 + &
 
 ### POSTCSS DOCUMENTS

@@ -181,7 +181,7 @@ module.exports = Generator.extend({
         );
         this.fs.copyTpl(
             this.templatePath('index.js.html'),
-            this.destinationPath('app/javascript/index.js'),
+            this.destinationPath('app/javascript/pages/index.js'),
             this
         );
         this.sourceRoot(path.join(__dirname, 'templates', 'assets'));

@@ -1,6 +1,6 @@
 {
     "name": "generator-yoapp",
-    "version": "1.1.81",
+    "version": "1.1.9",
     "author": "Lore-w",
     "email": "metro-cpu@hotmail.com",
     "repository": {
@@ -9,10 +9,10 @@
     },
     "dependencies": {
         "chalk": "^1.1.1",
-        "check-dir": ">=0.0.1",
+        "check-dir": "^0.0.1",
         "dateformat": "^1.0.11",
         "mkdirp": "^0.5.1",
-        "who-ami": ">=1.0.1",
+        "who-ami": "^1.0.1",
         "yeoman-generator": "^1.1.0",
         "yosay": "^1.0.5"
     }

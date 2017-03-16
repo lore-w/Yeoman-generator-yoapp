@@ -10,7 +10,6 @@ let fs = require('fs'),
     path = require('path'),
     gulp = require('gulp'),
     runSequence = require('run-sequence'),
-    glob = require('glob'),
     webpack = require("webpack"),
     connect = require('gulp-connect'),
     open = require('gulp-open'),
@@ -22,9 +21,11 @@ let fs = require('fs'),
     precss = require('precss'),
     autoprefixer = require('autoprefixer'),
     assets = require('postcss-assets'),
+    toRem = require('2rem'),
+    calc = require('math-calc'),
+    sourcemap = require('gulp-sourcemaps'),
     rev = require('gulp-rev'),
     uglify = require('gulp-uglify'),
-    concat = require('gulp-concat'),
     del = require('del'),
     inject = require('gulp-inject'),
     _ = require('lodash'),
@@ -121,22 +122,6 @@ function writeSetting(src, data) {
     return p;
 }
 
-// 获取需要打包的js
-function getJs() {
-
-    let fileName,
-        fileNameReg = /\/([^/]+)\.js/i; //g匹配第二次会失败？？
-
-    return glob.sync('./app/javascript/*.js', {nodir: true})
-        .reduce(function (memo, current) {
-
-            fileName = fileNameReg.exec(current)[1];
-            memo[fileName] = './app/javascript/' + fileName + '.js';
-
-            return memo;
-        }, {});
-}
-
 // Connect服务
 gulp.task('connect', function () {
 
@@ -154,7 +139,7 @@ gulp.task('open', function () {
     let browser = ws.getBrowser(),
         openConf = {
             app: browser,
-            uri: baseUrl + ':' + port + '/'
+            uri: baseUrl + ':' + port + '/dist/index.html'
         };
 
     !browser && delete openConf.app;
@@ -189,7 +174,7 @@ gulp.task('webpack', ['clean:js',], function (cb) {
 
                 dev.output.path = path.resolve(DIST_PATH, 'assets/temp');
 
-                dev.entry = Object.assign({}, dev.entry, getJs());
+                evn !== 'dev' && delete dev.devtool;
 
                 webpack(dev, function (err, stats) {
                     if (err) {
@@ -210,28 +195,14 @@ gulp.task('webpack', ['clean:js',], function (cb) {
         });
 });
 
-// concat all js but not include vendors.js
-gulp.task('js:all', ['webpack'], function () {
+gulp.task('js', ['webpack'], function () {
 
-    return gulp.src([path.resolve(DIST_PATH, 'assets/temp/*.js'),
-        '!' + path.resolve(DIST_PATH, 'assets/temp/vendors.js')])
-        .pipe(concat('all.js'))
+    return gulp.src([path.resolve(DIST_PATH, 'assets/temp/*.js')])
         .pipe(gulpif(evn !== 'dev', uglify()))
         .pipe(gulpif(evn !== 'dev', rev()))
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets')))
         .pipe(gulpif(evn === 'dev', connect.reload()));
 });
-gulp.task('js:vendors', ['webpack'], function () {
-
-    return gulp.src([path.resolve(DIST_PATH, 'assets/temp/vendors.js')])
-        .pipe(gulpif(evn !== 'dev', uglify()))
-        .pipe(gulpif(evn !== 'dev', rev()))
-        .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets')))
-        .pipe(gulpif(evn === 'dev', connect.reload()));
-});
-
-gulp.task('js', ['js:vendors', 'js:all']);
-// 打包js end
 
 // css
 gulp.task('postcss', function () {
@@ -243,12 +214,15 @@ gulp.task('postcss', function () {
             cachebuster: true,
             relative: APP_PATH,
             loadPaths: [path.resolve(APP_PATH, 'images')]
-        })];
+        }),
+        toRem,
+        calc];
 
     return gulp.src(path.resolve(APP_PATH, 'style/index.css'))
-        .pipe(gulpif(evn === 'dev', plumber()))
+        .pipe(gulpif(evn === 'dev', sourcemap.init()))
         .pipe(postcss(processors))
         .pipe(gulpif(evn !== 'dev', rev()))
+        .pipe(gulpif(evn === 'dev', sourcemap.write()))
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets')))
         .pipe(gulpif(evn === 'dev', connect.reload()));
 });
