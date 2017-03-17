@@ -53,7 +53,7 @@ module.exports = Generator.extend({
         var userInput = [{
             name: 'name',
             message: 'Name:',
-            default: regDetection.test(floderName) ? 'demo' : floderName
+            default: regDetection.test(floderName) ? 'demo' : floderName.toLowerCase()
         }, {
             name: 'author',
             message: 'Author:',
