@@ -1,5 +1,6 @@
 ## Yeoman generators
 
+![](http://wwww.lore-w.com/images/2017/app-animation.gif)
 基于Yeoman初始化项目的脚手架文件和相关配置，使用Webpack、gulp、PostCss
 
 + Basic
