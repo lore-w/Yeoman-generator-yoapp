@@ -27,30 +27,30 @@ Project init
 ```bash
 $ gulp
 ```
-dev mode
+Dev mode
 
 ```
 $ gulp --evn=prd
 ```
-prd mode
+Prd mode
 
 ```
 $ gulp -h
 ```
-show help
+Show help
 
 ### Options
 + `--skip-welcome-message` 跳过项目初始化前的大胡子欢迎信息
 + `--skip-install` 只初始化项目，跳过npm package安装
 
 ### Feature
-+ *使用webpack编译es6代码和包管理*
++ *使用webpack编译es6和包管理*
 + *使用gulp控制项目的构建流程*
 + *使用POSTCSS*
 + *支持es6 Promise*
 + *已经对jquery和jquery插件的支持做兼容，选择使用jquery包即可生成相关的配置文件和使用示例*
 + *当选择使用jquery、hammerjs、lodash、mustache在打包文件时默认提取公共代码到`vendors.js`中*
-+ LiveReload
++ *LiveReload*
 
 ### POSTCSS EXAMPLE
 + base64 `background: inline('demo.png')`
@@ -66,9 +66,13 @@ show help
 + @at-root
 + Property Lookup `.heading {margin: 20px;padding: @margin;}`
 + &
++ `+`、 `-`、 `*`、 `/`、 `%`
++ PX自动转REM
 
 ### POSTCSS DOCUMENTS
 + [POSTCSS](https://www.npmjs.com/package/postcss)
 + [PRECSS](https://www.npmjs.com/package/precss)
 + [AUTOPREFIXER](https://www.npmjs.com/package/autoprefixer)
 + [POSTCSS-ASSETS](https://www.npmjs.com/package/postcss-assets)
++ [2REM](https://www.npmjs.com/package/2rem)
++ [MATH-CALC](https://www.npmjs.com/package/math-calc)

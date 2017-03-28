@@ -16,7 +16,6 @@ let fs = require('fs'),
     gulpif = require('gulp-if'),
     yargs = require('yargs'),
     gutil = require('gulp-util'),
-    plumber = require('gulp-plumber'),
     postcss = require('gulp-postcss'),
     precss = require('precss'),
     autoprefixer = require('autoprefixer'),
@@ -28,29 +27,22 @@ let fs = require('fs'),
     uglify = require('gulp-uglify'),
     del = require('del'),
     inject = require('gulp-inject'),
-    _ = require('lodash'),
-    ws = require('ws-helper');
+    _ = require('lodash');
 
 
-let argv = yargs
-    .option('evn', {
-        alias: 'e',
-        demand: true,
-        default: 'dev',
-        describe: 'dev、pre or prd?',
-        type: 'string'
-    })
-    .usage('Usage: gulp [options]')
-    .example('gulp dev')
-    .help('h')
-    .alias('h', 'help')
-    .locale('en').argv;
+let argv = yargs.option('evn', {
+    alias: 'e',
+    demand: true,
+    default: 'dev',
+    describe: 'dev、pre or prd?',
+    type: 'string'
+}).usage('Usage: gulp [options]').example('gulp dev').help('h').alias('h', 'help').locale('en').argv;
 
 let ROOT_PATH = path.resolve(__dirname),
     APP_PATH = path.resolve(ROOT_PATH, 'app'),
     DIST_PATH = path.resolve(ROOT_PATH, 'dist'),
     port = 8081,
-    baseUrl = 'http://' + ws.getIPAdress(),
+    baseUrl = 'http://' + getIPAdress(),
     resourceUri = {
         dev: baseUrl + ':' + port,
         pre: '',
@@ -59,37 +51,93 @@ let ROOT_PATH = path.resolve(__dirname),
     evn = argv.evn,
     taskList;
 
-// 提取环境配置
-function getEvnSetting(obj, evn) {
+/*
+ *@description 获取IP
+ */
+function getIPAdress () {
 
-    return _.reduce(obj, function (result, value, key) {
+    let interfaces = require('os').networkInterfaces(),
+        devName,
+        iface,
+        alias,
+        i;
 
-        if (!ws.isObject(value)) {
-
-
-            result[key] = value;
-        } else {
-
-            if (typeof value[evn] !== 'undefined') {
-
-                result[key] = value[evn];
-            } else {
-
-                result[key] = {};
-                _.forOwn(value, function (val, k) {
-
-                    result[key][k] = val[evn];
-                })
+    for (devName in interfaces) {
+        iface = interfaces[devName];
+        for (i = 0; i < iface.length; i++) {
+            alias = iface[i];
+            if ((alias.family).toLowerCase() === 'ipv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
             }
         }
-
-        return result;
-    }, {})
+    }
 }
 
-// 读取配置文件
+/*
+ *@description 获取chrome在不同系统下的别名
+ */
+function getBrowser () {
+
+    let browser = '';
+
+    if (os.platform() === 'linux') {
+        browser = 'google-chrome';
+    } else if (os.platform() === 'darwin') {
+        browser = 'google chrome';
+    } else if (os.platform() === 'win32') {
+        browser = 'chrome';
+    }
+
+    return browser;
+}
+
+/*
+ *@description 移除字符串中的注释（目前只支持块注释，node环境不支持正则负向零宽断言）
+ */
+function removeComments (str) {
+
+    //let lineComments = /(?<![":])\/\/.*/g; //node环境不支持正则负向零宽断言
+
+    let blockComments = /\/\*[\s\S]*?\*\//g;
+
+    return str.replace(blockComments, '');
+}
+/*
+ *@description 提取环境配置
+ */
+function getEvnSetting(obj, evn) {
+
+    let resObj = _.cloneDeep(obj);
+
+    function recursion (oObj, nObj) {
+        _.forOwn(oObj, function (value, key) {
+
+            if (_.isObject(value) && _.isArray(value)) {
+
+                if (_.isUndefined(value[evn])) {
+
+                    recursion(value, nObj[key]);
+                } else {
+
+                    nObj[key] = value[evn];
+                }
+            } else {
+
+                nObj[key] = value;
+            }
+        })
+    }
+
+    recursion(obj, resObj);
+
+    return resObj;
+}
+
+/*
+ *@description  读取配置文件
+ */
 function readSetting(src) {
-    let p = new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
 
         fs.readFile(src, 'utf-8', function (err, data) {
 
@@ -97,18 +145,18 @@ function readSetting(src) {
                 reject(new Error(err));
             } else {
 
-                resolve(JSON.parse(data));
+                resolve(JSON.parse(removeComments(data)));
             }
         })
     });
-
-    return p;
 }
 
-// 写入配置文件
+/*
+ *@description 写入配置文件
+ */
 function writeSetting(src, data) {
 
-    let p = new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
 
         fs.writeFile(src, data, 'utf-8', function (err) {
 
@@ -119,7 +167,6 @@ function writeSetting(src, data) {
             }
         })
     });
-    return p;
 }
 
 // Connect服务
@@ -136,7 +183,7 @@ gulp.task('connect', function () {
 // 打开浏览器
 gulp.task('open', function () {
 
-    let browser = ws.getBrowser(),
+    let browser = getBrowser(),
         openConf = {
             app: browser,
             uri: baseUrl + ':' + port + '/dist/index.html'
@@ -297,7 +344,7 @@ gulp.task('replace', function () {
             }
         }
     )).pipe(gulp.dest(DIST_PATH))
-    .pipe(connect.reload());
+        .pipe(connect.reload());
 });
 
 // html change
