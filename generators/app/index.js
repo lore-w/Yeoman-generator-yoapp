@@ -44,7 +44,7 @@ module.exports = Generator.extend({
             return;
         }
         if (!this.options['skip-welcome-message']) {
-            this.log(yosay(chalk.green('\'Hello~\' I include Wepack、PostCss and a gulpfile to build your app')));
+            this.log(yosay(chalk.green('\'HELLO:-)\' I INCLUDE WEPACK、POSTCSS & A GULPFILE TO BUILD YOUR APP')));
         }
 
         var regDetection = new RegExp("[\\u4E00-\\u9FFF]+","g"),
@@ -219,6 +219,6 @@ module.exports = Generator.extend({
             return;
         }
 
-        this.log(yosay(chalk.green('\'Hey~\' YOAPP INIT DONE')));
+        this.log(yosay(chalk.green('\'HEY:)\' YOAPP INIT DONE')));
     }
 });
