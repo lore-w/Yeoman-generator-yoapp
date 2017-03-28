@@ -112,7 +112,7 @@ function getEvnSetting(obj, evn) {
     function recursion (oObj, nObj) {
         _.forOwn(oObj, function (value, key) {
 
-            if (_.isObject(value) && _.isArray(value)) {
+            if (_.isObject(value) && !_.isArray(value)) {
 
                 if (_.isUndefined(value[evn])) {
 

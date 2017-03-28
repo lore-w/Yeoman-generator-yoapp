@@ -32,7 +32,7 @@ module.exports = Generator.extend({
     checkDir: function () {
 
         if (dir.checkDirSync(process.cwd())) {
-            this.log(chalk.red('NOT EMPTY FOLDER!!'));
+            this.log(chalk.red('Not Empty Folder'));
             this.notEmpty = true;
         }
     },
@@ -44,7 +44,7 @@ module.exports = Generator.extend({
             return;
         }
         if (!this.options['skip-welcome-message']) {
-            this.log(yosay(chalk.green('\'HELLO:-)\' I INCLUDE WEPACK、POSTCSS & A GULPFILE TO BUILD YOUR APP')));
+            this.log(yosay(chalk.green('\'HELLO:-)\' Welcome To Use Yoapp')));
         }
 
         var regDetection = new RegExp("[\\u4E00-\\u9FFF]+","g"),
@@ -175,9 +175,10 @@ module.exports = Generator.extend({
             this.destinationPath('.editorconfig')
         );
 
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('app.conf.json'),
-            this.destinationPath('app.conf.json')
+            this.destinationPath('app.conf.json'),
+            this
         );
         this.fs.copyTpl(
             this.templatePath('index.js.html'),
@@ -207,7 +208,7 @@ module.exports = Generator.extend({
                 bower: false,
                 npm: true,
                 callback: function () {
-                    _this.log(chalk.green("NPM INSTALL SUCCESS") + '\n');
+                    _this.log(chalk.green("Npm Install Success") + '\n');
                 }
             });
         }
@@ -219,6 +220,6 @@ module.exports = Generator.extend({
             return;
         }
 
-        this.log(yosay(chalk.green('\'HEY:)\' YOAPP INIT DONE')));
+        this.log(yosay(chalk.green('\':)\' Enjoy Your App')));
     }
 });
