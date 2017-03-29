@@ -56,21 +56,21 @@ let ROOT_PATH = path.resolve(__dirname),
  */
 function getIPAdress () {
 
-    let interfaces = require('os').networkInterfaces(),
-        devName,
-        iface,
-        alias,
-        i;
+    let interfaces = os.networkInterfaces(),
+        ip;
 
-    for (devName in interfaces) {
-        iface = interfaces[devName];
-        for (i = 0; i < iface.length; i++) {
-            alias = iface[i];
-            if ((alias.family).toLowerCase() === 'ipv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-                return alias.address;
+    _.forOwn(interfaces, function (value, key) {
+
+        _.forEach(value, function (val, k) {
+
+            if (val.family.toLowerCase() === 'ipv4' && val.address !== '127.0.0.1' && !val.internal) {
+
+                ip = val.address;
             }
-        }
-    }
+        });
+    });
+
+    return ip;
 }
 
 /*

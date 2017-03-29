@@ -5,7 +5,7 @@
  *@time: <%= time %>
  */
 
-import CONF from '../commons/conf';
+import CONF from './conf';
 
 let Service = {
 
