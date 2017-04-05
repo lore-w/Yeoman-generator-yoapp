@@ -20,11 +20,11 @@ let fs = require('fs'),
     precss = require('precss'),
     autoprefixer = require('autoprefixer'),
     assets = require('postcss-assets'),
+    cssnano = require('gulp-cssnano'),
     toRem = require('2rem'),
     calc = require('math-calc'),
     sourcemap = require('gulp-sourcemaps'),
     rev = require('gulp-rev'),
-    uglify = require('gulp-uglify'),
     del = require('del'),
     inject = require('gulp-inject'),
     _ = require('lodash');
@@ -54,14 +54,14 @@ let ROOT_PATH = path.resolve(__dirname),
 /*
  *@description 获取IP
  */
-function getIPAdress () {
+function getIPAdress() {
 
     let interfaces = os.networkInterfaces(),
         ip;
 
-    _.forOwn(interfaces, function (value, key) {
+    _.forOwn(interfaces, function(value, key) {
 
-        _.forEach(value, function (val, k) {
+        _.forEach(value, function(val, k) {
 
             if (val.family.toLowerCase() === 'ipv4' && val.address !== '127.0.0.1' && !val.internal) {
 
@@ -76,7 +76,7 @@ function getIPAdress () {
 /*
  *@description 获取chrome在不同系统下的别名
  */
-function getBrowser () {
+function getBrowser() {
 
     let browser = '';
 
@@ -94,7 +94,7 @@ function getBrowser () {
 /*
  *@description 移除字符串中的注释（目前只支持块注释，node环境不支持正则负向零宽断言）
  */
-function removeComments (str) {
+function removeComments(str) {
 
     //let lineComments = /(?<![":])\/\/.*/g; //node环境不支持正则负向零宽断言
 
@@ -109,8 +109,8 @@ function getEvnSetting(obj, evn) {
 
     let resObj = _.cloneDeep(obj);
 
-    function recursion (oObj, nObj) {
-        _.forOwn(oObj, function (value, key) {
+    function recursion(oObj, nObj) {
+        _.forOwn(oObj, function(value, key) {
 
             if (_.isObject(value) && !_.isArray(value)) {
 
@@ -137,9 +137,9 @@ function getEvnSetting(obj, evn) {
  *@description  读取配置文件
  */
 function readSetting(src) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
 
-        fs.readFile(src, 'utf-8', function (err, data) {
+        fs.readFile(src, 'utf-8', function(err, data) {
 
             if (err) {
                 reject(new Error(err));
@@ -156,9 +156,9 @@ function readSetting(src) {
  */
 function writeSetting(src, data) {
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
 
-        fs.writeFile(src, data, 'utf-8', function (err) {
+        fs.writeFile(src, data, 'utf-8', function(err) {
 
             if (err) {
                 reject(new Error(err));
@@ -170,7 +170,7 @@ function writeSetting(src, data) {
 }
 
 // Connect服务
-gulp.task('connect', function () {
+gulp.task('connect', function() {
 
     connect.server({
         root: ROOT_PATH,
@@ -181,7 +181,7 @@ gulp.task('connect', function () {
 });
 
 // 打开浏览器
-gulp.task('open', function () {
+gulp.task('open', function() {
 
     let browser = getBrowser(),
         openConf = {
@@ -196,34 +196,40 @@ gulp.task('open', function () {
 });
 
 // 打包js
-gulp.task('clean:js', function () {
+gulp.task('clean:js', function() {
 
     return del(path.resolve(DIST_PATH, 'assets/temp'));
 });
 
-gulp.task('webpack', ['clean:js',], function (cb) {
+gulp.task('webpack', ['clean:js', ], function(cb) {
 
     readSetting(path.resolve(ROOT_PATH, 'app.conf.json'))
-        .then(function (data) {
+        .then(function(data) {
 
             let src = path.resolve(APP_PATH, 'javascript/commons/conf.js'),
                 d = 'const CONF = ' + JSON.stringify(getEvnSetting(data, evn)) + ';export default CONF;';
 
             return writeSetting(src, d);
         })
-        .then(function (data) {
+        .then(function(data) {
 
             if (data === true) {
 
-                gutil.log(gutil.colors.green('Write Setting Done'));
+                gutil.log(gutil.colors.green('WRITE SETTING DONE'));
 
-                let dev = new Object(require('./webpack.config'));
+                let webpackConf = new Object(require('./webpack.config'));
+                let uglify = new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}});
 
-                dev.output.path = path.resolve(DIST_PATH, 'assets/temp');
+                webpackConf.output.path = path.resolve(DIST_PATH, 'assets/temp');
 
-                evn !== 'dev' && delete dev.devtool;
+                if (evn !== 'dev') {
 
-                webpack(dev, function (err, stats) {
+                    delete webpackConf.devtool;
+
+                    webpackConf.plugins.push(uglify);
+                };
+
+                webpack(webpackConf, function(err, stats) {
                     if (err) {
                         throw new gutil.PluginError("webpack", err);
 
@@ -237,26 +243,27 @@ gulp.task('webpack', ['clean:js',], function (cb) {
                     cb();
                 });
             } else {
-                gutil.log(gutil.colors.red('Write Setting Fail'));
+                gutil.log(gutil.colors.red('WRITE SETTING FAIL'));
             }
         });
 });
 
-gulp.task('js', ['webpack'], function () {
+gulp.task('js', ['webpack'], function() {
 
     return gulp.src([path.resolve(DIST_PATH, 'assets/temp/*.js')])
-        .pipe(gulpif(evn !== 'dev', uglify()))
         .pipe(gulpif(evn !== 'dev', rev()))
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets')))
         .pipe(gulpif(evn === 'dev', connect.reload()));
 });
 
 // css
-gulp.task('postcss', function () {
+gulp.task('postcss', function() {
 
     let processors = [
         precss,
-        autoprefixer({remove: false}),
+        autoprefixer({
+            remove: false
+        }),
         assets({
             cachebuster: true,
             relative: APP_PATH,
@@ -269,12 +276,13 @@ gulp.task('postcss', function () {
         .pipe(gulpif(evn === 'dev', sourcemap.init()))
         .pipe(postcss(processors))
         .pipe(gulpif(evn !== 'dev', rev()))
+        .pipe(gulpif(evn !== 'dev', cssnano()))
         .pipe(gulpif(evn === 'dev', sourcemap.write()))
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets')))
         .pipe(gulpif(evn === 'dev', connect.reload()));
 });
 
-gulp.task('css', ['postcss'], function () {
+gulp.task('css', ['postcss'], function() {
 
     return gulp.src([path.resolve(DIST_PATH, 'index.css')])
         .pipe(gulpif(evn === 'dev', connect.reload()));
@@ -282,18 +290,18 @@ gulp.task('css', ['postcss'], function () {
 
 
 // html & fonts & images
-gulp.task('cp:html', function () {
+gulp.task('cp:html', function() {
 
     return gulp.src([path.resolve(APP_PATH, '*.html')])
         .pipe(gulp.dest(path.resolve(DIST_PATH)));
 });
-gulp.task('cp:fonts', function () {
+gulp.task('cp:fonts', function() {
 
     return gulp.src([path.resolve(APP_PATH, 'fonts/*')])
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets/fonts')))
         .pipe(connect.reload());
 });
-gulp.task('cp:images', function () {
+gulp.task('cp:images', function() {
 
     return gulp.src([path.resolve(APP_PATH, 'images/**')])
         .pipe(gulp.dest(path.resolve(DIST_PATH, 'assets/images')))
@@ -303,28 +311,31 @@ gulp.task('cp:images', function () {
 gulp.task('cp', ['cp:html', 'cp:fonts', 'cp:images']);
 
 // replace
-gulp.task('replace', function () {
+gulp.task('replace', function() {
 
     let target = gulp.src(path.resolve(DIST_PATH, '*.html')),
         sources = gulp.src([
             path.resolve(DIST_PATH, 'assets/all*.js'),
             path.resolve(DIST_PATH, 'assets/index*.css')
-        ], {read: false}),
+        ], {
+            read: false
+        }),
         vendors = gulp.src([
             path.resolve(DIST_PATH, 'assets/vendors*.js')
-        ], {read: false});
+        ], {
+            read: false
+        });
 
     return target.pipe(inject(vendors, {
 
             starttag: '<!-- inject:vendors:{{ext}} -->',
-            transform: function (filepath) {
+            transform: function(filepath) {
 
                 return '<script src="' + resourceUri[evn] + filepath + '"></script>';
             }
-        }
-    )).pipe(inject(sources, {
+        })).pipe(inject(sources, {
 
-            transform: function (filepath) {
+            transform: function(filepath) {
 
                 let pathSplit = filepath.split('.'),
                     extension = pathSplit[pathSplit.length - 1];
@@ -342,36 +353,35 @@ gulp.task('replace', function () {
                     gutil.log(gutil.colors.red('Match Error'));
                 }
             }
-        }
-    )).pipe(gulp.dest(DIST_PATH))
+        })).pipe(gulp.dest(DIST_PATH))
         .pipe(connect.reload());
 });
 
 // html change
-gulp.task('html', function () {
+gulp.task('html', function() {
 
     runSequence('cp:html', 'replace');
 });
 
 // del
-gulp.task('clean:dist', function () {
+gulp.task('clean:dist', function() {
 
     return del(DIST_PATH);
 });
 
 //dev
-gulp.task('dev', function () {
+gulp.task('dev', function() {
 
     runSequence('clean:dist', ['js', 'css', 'cp'], 'replace', ['connect', 'watch', 'open']);
 });
 // build
-gulp.task('build', function () {
+gulp.task('build', function() {
 
     runSequence('clean:dist', ['js', 'css', 'cp'], 'replace', 'clean:js');
 });
 
 // watch
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     gulp.watch(['./app/style/**/*.css'], ['css']);
     gulp.watch(['./app/javascript/**/*.js', './app.conf.json'], ['js']);
     gulp.watch(['./app/*.html'], ['html']);
