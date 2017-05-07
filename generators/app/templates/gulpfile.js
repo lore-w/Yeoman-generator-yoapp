@@ -22,13 +22,119 @@ let fs = require('fs'),
     assets = require('postcss-assets'),
     cssnano = require('gulp-cssnano'),
     toRem = require('2rem'),
-    calc = require('math-calc'),
     sourcemap = require('gulp-sourcemaps'),
     rev = require('gulp-rev'),
     del = require('del'),
     inject = require('gulp-inject'),
     _ = require('lodash');
 
+let utils = {
+
+    //获取IP
+    getIPAdress() {
+        let interfaces = os.networkInterfaces(),
+            ip;
+
+        _.forOwn(interfaces, function(value, key) {
+
+            _.forEach(value, function(val, k) {
+
+                if (val.family.toLowerCase() === 'ipv4' && val.address !== '127.0.0.1' && !val.internal) {
+
+                    ip = val.address;
+                }
+            });
+        });
+
+        return ip;
+    },
+
+    //获取chrome在不同系统下的别名
+    getBrowser() {
+        let browser = '';
+
+        if (os.platform() === 'linux') {
+            browser = 'google-chrome';
+        } else if (os.platform() === 'darwin') {
+            browser = 'google chrome';
+        } else if (os.platform() === 'win32') {
+            browser = 'chrome';
+        }
+
+        return browser;
+    },
+
+    //移除字符串中的注释（目前只支持块注释，node环境负向零宽断言TODO）
+    removeComments(str) {
+
+        //let lineComments = /(?<![":])\/\/.*/g; //负向零宽断言
+
+        let blockComments = /\/\*[\s\S]*?\*\//g;
+
+        return str.replace(blockComments, '');
+    },
+
+    // 获取当前环境下的配置
+    getEvnSetting(obj, evn) {
+
+        let resObj = _.cloneDeep(obj);
+
+        function recursion(oObj, nObj) {
+            _.forOwn(oObj, function(value, key) {
+
+                if (_.isObject(value) && !_.isArray(value)) {
+
+                    if (_.isUndefined(value[evn])) {
+
+                        recursion(value, nObj[key]);
+                    } else {
+
+                        nObj[key] = value[evn];
+                    }
+                } else {
+
+                    nObj[key] = value;
+                }
+            })
+        }
+
+        recursion(obj, resObj);
+
+        return resObj;
+    },
+
+    //读取配置文件
+    readSetting(src) {
+        return new Promise(function(resolve, reject) {
+
+            fs.readFile(src, 'utf-8', function(err, data) {
+
+                if (err) {
+                    reject(new Error(err));
+                } else {
+
+                    resolve(JSON.parse(utils.removeComments(data)));
+                }
+            })
+        });
+    },
+
+    //写入配置文件
+    writeSetting(src, data) {
+
+        return new Promise(function(resolve, reject) {
+
+            fs.writeFile(src, data, 'utf-8', function(err) {
+
+                if (err) {
+                    reject(new Error(err));
+                } else {
+                    resolve(true);
+                }
+            })
+        });
+    }
+};
 
 let argv = yargs.option('evn', {
     alias: 'e',
@@ -42,7 +148,7 @@ let ROOT_PATH = path.resolve(__dirname),
     APP_PATH = path.resolve(ROOT_PATH, 'app'),
     DIST_PATH = path.resolve(ROOT_PATH, 'dist'),
     port = 8081,
-    baseUrl = 'http://' + getIPAdress(),
+    baseUrl = 'http://' + utils.getIPAdress(),
     resourceUri = {
         dev: baseUrl + ':' + port,
         pre: '',
@@ -50,124 +156,6 @@ let ROOT_PATH = path.resolve(__dirname),
     },
     evn = argv.evn,
     taskList;
-
-/*
- *@description 获取IP
- */
-function getIPAdress() {
-
-    let interfaces = os.networkInterfaces(),
-        ip;
-
-    _.forOwn(interfaces, function(value, key) {
-
-        _.forEach(value, function(val, k) {
-
-            if (val.family.toLowerCase() === 'ipv4' && val.address !== '127.0.0.1' && !val.internal) {
-
-                ip = val.address;
-            }
-        });
-    });
-
-    return ip;
-}
-
-/*
- *@description 获取chrome在不同系统下的别名
- */
-function getBrowser() {
-
-    let browser = '';
-
-    if (os.platform() === 'linux') {
-        browser = 'google-chrome';
-    } else if (os.platform() === 'darwin') {
-        browser = 'google chrome';
-    } else if (os.platform() === 'win32') {
-        browser = 'chrome';
-    }
-
-    return browser;
-}
-
-/*
- *@description 移除字符串中的注释（目前只支持块注释，node环境不支持正则负向零宽断言）
- */
-function removeComments(str) {
-
-    //let lineComments = /(?<![":])\/\/.*/g; //node环境不支持正则负向零宽断言
-
-    let blockComments = /\/\*[\s\S]*?\*\//g;
-
-    return str.replace(blockComments, '');
-}
-/*
- *@description 提取环境配置
- */
-function getEvnSetting(obj, evn) {
-
-    let resObj = _.cloneDeep(obj);
-
-    function recursion(oObj, nObj) {
-        _.forOwn(oObj, function(value, key) {
-
-            if (_.isObject(value) && !_.isArray(value)) {
-
-                if (_.isUndefined(value[evn])) {
-
-                    recursion(value, nObj[key]);
-                } else {
-
-                    nObj[key] = value[evn];
-                }
-            } else {
-
-                nObj[key] = value;
-            }
-        })
-    }
-
-    recursion(obj, resObj);
-
-    return resObj;
-}
-
-/*
- *@description  读取配置文件
- */
-function readSetting(src) {
-    return new Promise(function(resolve, reject) {
-
-        fs.readFile(src, 'utf-8', function(err, data) {
-
-            if (err) {
-                reject(new Error(err));
-            } else {
-
-                resolve(JSON.parse(removeComments(data)));
-            }
-        })
-    });
-}
-
-/*
- *@description 写入配置文件
- */
-function writeSetting(src, data) {
-
-    return new Promise(function(resolve, reject) {
-
-        fs.writeFile(src, data, 'utf-8', function(err) {
-
-            if (err) {
-                reject(new Error(err));
-            } else {
-                resolve(true);
-            }
-        })
-    });
-}
 
 // Connect服务
 gulp.task('connect', function() {
@@ -183,7 +171,7 @@ gulp.task('connect', function() {
 // 打开浏览器
 gulp.task('open', function() {
 
-    let browser = getBrowser(),
+    let browser = utils.getBrowser(),
         openConf = {
             app: browser,
             uri: baseUrl + ':' + port + '/dist/index.html'
@@ -203,13 +191,13 @@ gulp.task('clean:js', function() {
 
 gulp.task('webpack', ['clean:js', ], function(cb) {
 
-    readSetting(path.resolve(ROOT_PATH, 'app.conf.json'))
+    utils.readSetting(path.resolve(ROOT_PATH, 'app.conf.json'))
         .then(function(data) {
 
             let src = path.resolve(APP_PATH, 'javascript/commons/conf.js'),
-                d = 'const CONF = ' + JSON.stringify(getEvnSetting(data, evn)) + ';export default CONF;';
+                d = 'const CONF = ' + JSON.stringify(utils.getEvnSetting(data, evn)) + ';export default CONF;';
 
-            return writeSetting(src, d);
+            return utils.writeSetting(src, d);
         })
         .then(function(data) {
 
@@ -218,7 +206,11 @@ gulp.task('webpack', ['clean:js', ], function(cb) {
                 gutil.log(gutil.colors.green('WRITE SETTING DONE'));
 
                 let webpackConf = new Object(require('./webpack.config'));
-                let uglify = new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}});
+                let uglify = new webpack.optimize.UglifyJsPlugin({
+                    compress: {
+                        warnings: false
+                    }
+                });
 
                 webpackConf.output.path = path.resolve(DIST_PATH, 'assets/temp');
 
@@ -269,8 +261,8 @@ gulp.task('postcss', function() {
             relative: APP_PATH,
             loadPaths: [path.resolve(APP_PATH, 'images')]
         }),
-        toRem,
-        calc];
+        toRem
+    ];
 
     return gulp.src(path.resolve(APP_PATH, 'style/index.css'))
         .pipe(gulpif(evn === 'dev', sourcemap.init()))
@@ -310,7 +302,7 @@ gulp.task('cp:images', function() {
 
 gulp.task('cp', ['cp:html', 'cp:fonts', 'cp:images']);
 
-// replace
+// reject
 gulp.task('replace', function() {
 
     let target = gulp.src(path.resolve(DIST_PATH, '*.html')),

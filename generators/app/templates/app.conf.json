@@ -3,7 +3,7 @@
  *@author: <%= author %>
  *@email: <%= email %>
  *@time: <%= time %>
- *@tip：目前只支持块注释，node不支持正则负向零宽断言// TODO
+ *@tip：目前只支持块注释，node环境负向零宽断言TODO
  */
 
 {

@@ -66,7 +66,6 @@ Show help
 + @at-root
 + Property Lookup `.heading {margin: 20px;padding: @margin;}`
 + &
-+ `+`、 `-`、 `*`、 `/`、 `%`
 + PX自动转REM
 
 ### POSTCSS DOCUMENTS
@@ -75,4 +74,3 @@ Show help
 + [AUTOPREFIXER](https://www.npmjs.com/package/autoprefixer)
 + [POSTCSS-ASSETS](https://www.npmjs.com/package/postcss-assets)
 + [2REM](https://www.npmjs.com/package/2rem)
-+ [MATH-CALC](https://www.npmjs.com/package/math-calc)
