@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 /*！
  *@description: 样式入口文件
  *@author: <%= author%>
@@ -6,15 +7,19 @@
  *@time: <%= time%>
  */
 
+
 /*插件
-@import "./plugin/demo";*/
+ *@import "./plugin/demo";
+ */
 
 @import "./base/variable";
 @import "./base/common";
 
 /*组件*/
+
 @import "./partials/header";
 @import "./partials/footer";
 
 /*页面*/
+
 @import "./pages/index";

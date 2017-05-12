@@ -5,14 +5,8 @@
  *@time: <%= time %>
  */
 
-(function($){
-    $.fn.sayHello = function () {
-
-        console.log('Hello Jquery Plugin');
-    }
+(function($) {
+  $.fn.sayHello = function() {
+    console.log('Hello Jquery Plugin');
+  }
 })(jQuery);
-
-
-
-
-

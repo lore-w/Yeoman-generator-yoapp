@@ -1,0 +1,27 @@
+/*
+ *@description: webpack conf prod
+ *@author: <%= author %>
+ *@email: <%= email %>
+ *@time: <%= time %>
+ */
+"use strict";
+const webpack = require("webpack"),
+  merge = require('webpack-merge'),
+  baseWebpackConfig = require('./webpack.base.conf');
+
+module.exports = merge(baseWebpackConfig, {
+  output: {
+    filename: '[name].[chunkhash:10].js'
+  },
+  plugins: [<% if (hasLibs) { %>
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendors',
+      filename: '[name].[chunkhash:10].js'
+    }), <% } %>
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    })
+  ]
+});

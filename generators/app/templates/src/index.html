@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title><%= name %></title>
+  <% if (isMobile) { %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0 user-scalable=no">
+  <% } %>
+  <!-- inject:css -->
+  <!-- endinject -->
+  <% if (isMobile) { %>
+  <script type="text/javascript">
+    (function(doc, win) {
+      var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+      var docElement = doc.documentElement;
+      var screenW;
+      var screenH;
+      var setFontSize = function() {
+        screenW = screen.width;
+        screenH = screen.height;
+        // iphone 4s
+        if (screenW <= 320 && screenH <= 480) docElement.style.fontSize = '18px';
+        // 5 6 7
+        if (screenW >= 320 && screenH >= 568) docElement.style.fontSize = 25 * (screenW / 375) + 'px';
+        // ipad pc
+        if (screenW > 414) docElement.style.fontSize = '27.6px';
+      };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, setFontSize, false);
+      doc.addEventListener('DOMContentLoaded', setFontSize, false);
+    })(document, window);
+  </script>
+  <% } %>
+</head>
+
+<body>
+  demo
+  <!-- inject:vendors:js -->
+  <!-- endinject -->
+  <!-- inject:js -->
+  <!-- endinject -->
+</body>
+
+</html>

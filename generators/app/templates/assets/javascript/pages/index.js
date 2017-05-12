@@ -5,9 +5,7 @@
  *@time: <%= time %>
  */
 
-import CONF from '../commons/conf';
 import Service from '../commons/service';
-
 <% if (jquery) { %>
 require("imports-loader?$=jquery!../lib/jquery.plugin.demo.js");
 $('#demo').sayHello();

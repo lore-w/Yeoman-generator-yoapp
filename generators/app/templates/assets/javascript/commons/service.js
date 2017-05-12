@@ -8,10 +8,9 @@
 import CONF from './conf';
 
 let Service = {
-
-    demo () {
-        console.log('service');
-    }
+  demo() {
+    console.log(CONF.shareUrl);
+  }
 };
 
 export default Service;

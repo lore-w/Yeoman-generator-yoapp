@@ -1,0 +1,28 @@
+/*
+ *@description: app配置文件
+ *@author: <%= author %>
+ *@email: <%= email %>
+ *@time: <%= time %>
+ *@tip：目前只支持块注释，node环境负向零宽断言TODO
+ */
+
+{
+  "key": ["A", "B", "C"],
+  "shareUrl": {
+    "dev": "localhost",
+    "pre": "test.com",
+    "prd": "lore-w.com"
+  },
+  "API": {
+    "userList": {
+      "dev": "dev.requestList.do",
+      "pre": "pre.requestList.do",
+      "prd": "prd.requestList.do"
+    },
+    "usetDetail": {
+      "dev": "dev.requestDetail.do",
+      "pre": "pre.requestDetail.do",
+      "prd": "prd.requestDetail.do"
+    }
+  }
+}
