@@ -119,7 +119,7 @@ module.exports = Generator.extend({
     this.fs.copy(this.templatePath('gitignore'), this.destinationPath('.gitignore'));
     this.fs.copy(this.templatePath('editorconfig'), this.destinationPath('.editorconfig'));
 
-    this.fs.copyTpl(this.templatePath('README.md'), this.destinationPath('package.json'), this);
+    this.fs.copyTpl(this.templatePath('README.md'), this.destinationPath('README.md'), this);
     this.fs.copyTpl(this.templatePath('gulpfile.js'), this.destinationPath('gulpfile.js'), this);
     this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this);
 
@@ -127,11 +127,7 @@ module.exports = Generator.extend({
     this.fs.copyTpl(this.templatePath('.'), this.destinationPath('src'), this);
 
     this.sourceRoot(path.join(__dirname, 'templates', 'build'));
-    this.fs.copyTpl(
-      this.templatePath('utils.js'),
-      this.destinationPath('build/utils.js'),
-      this
-    );
+    this.fs.copyTpl(this.templatePath('utils.js'),this.destinationPath('build/utils.js'),this);
     this.fs.copyTpl(
       this.templatePath('webpack.base.conf.html'),
       this.destinationPath('build/webpack.base.conf.js'),
