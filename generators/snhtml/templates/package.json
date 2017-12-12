@@ -5,6 +5,12 @@
     "name": "<%=author %>",
     "email": "<%= email %>"
   },
+  "scripts": {
+    "DEV": "gulp -e=DEV",
+    "PRE": "gulp -e=PRE",
+    "SIT": "gulp -e=SIT",
+    "PRD": "gulp -e=PRD"
+  },
   "dependencies": {
   },
   "devDependencies": {
