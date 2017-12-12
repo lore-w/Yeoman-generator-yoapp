@@ -1,0 +1,31 @@
+/*
+ *@description Webpack base conf
+ *@author: <%= author %>
+ *@email: <%= email %>
+ *@time: <%= time %>
+ */
+
+"use strict";
+const path = require('path'),
+  webpack = require("webpack");
+
+const ROOT_PATH = path.resolve(__dirname);
+
+let config = {
+  entry: {
+    all: path.resolve(ROOT_PATH, '../src/javascript/index.js'),
+  },
+  output: {
+    path: '',
+  },
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      include: path.resolve(ROOT_PATH, '../src/javascript'),
+      loaders: ['babel-loader?cacheDirectory']
+    }]
+  },
+  plugins: []
+};
+
+module.exports = config;

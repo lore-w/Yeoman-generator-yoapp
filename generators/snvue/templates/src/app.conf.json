@@ -1,0 +1,46 @@
+/*
+ *@description: app配置文件
+ *@author: <%= author %>
+ *@email: <%= email %>
+ *@time: <%= time %>
+ *@tip：目前只支持块注释，node环境负向零宽断言TODO
+ */
+
+{
+  "key": ["A", "B", "C"],
+  "shareUrl": {
+    "DEV": "localhost",
+    "PRE": "test.com",
+    "PRD": "suning.com"
+  },
+  "PASSPORT": {
+    "CONFIG": {
+      "base": {
+        "SIT": "//moissit.cnsuning.com/",
+        "DEV": "//moispre.cnsuning.com/",
+        "PRE": "//moispre.cnsuning.com/",
+        "PRD": "//mois.suning.com/"
+      },
+      "loginTheme": "wap_new"
+    },
+    "AUTH_URL": {
+      "SIT": "https://passportsit.cnsuning.com/ids",
+      "DEV": "https://passportpre.cnsuning.com/ids",
+      "PRE": "https://passportpre.cnsuning.com/ids",
+      "PRD": "https://passport.suning.com/ids"
+    },
+    "IDSAUTH_SERVER_URL": {
+      "SIT": "https://aqsit.cnsuning.com/asc/auth",
+      "DEV": "https://aqpre.cnsuning.com/asc/auth",
+      "PRE": "https://aqpre.cnsuning.com/asc/auth",
+      "PRD": "https://aq.suning.com/asc/auth"
+    }
+  },
+  "API": {
+    "userList": {
+      "DEV": "DEV.do",
+      "PRE": "PRE.do",
+      "PRD": "PRD.do"
+    }
+  }
+}

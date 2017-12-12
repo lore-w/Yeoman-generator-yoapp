@@ -12,6 +12,7 @@ let util = require('util'),
   mkdirp = require('mkdirp'),
   Generator = require('yeoman-generator');
 
+
 module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
@@ -42,45 +43,32 @@ module.exports = class extends Generator {
       {name: 'author', message: 'Author:', default: whoami.name},
       {name: 'email', message: 'Email:', default: whoami.email},
       {name: 'version', message: 'Version:', default: '1.0.0'},
-      {type: 'confirm', name: 'isMobile', message: 'This is a mobile app?', default: true},
+      {name: 'cmsMenu', message: 'Cms Menu:', default: 'o2o'},
       {
         type: 'checkbox',
         name: 'lib',
-        message: 'You want to install?',
+        message: 'You want to use?',
         choices: [
-          {name: 'jquery', value: 'jquery', checked: true},
-          {name: 'lodash', value: 'lodash', checked: false},
-          {name: 'mustache', value: 'mustache', checked: false}
+          {name: 'GEO', value: 'geo', checked: false},
+          {name: 'SWIPER', value: 'swiper', checked: false}
         ]}
       ];
 
-    return this.prompt(userInput).then(answers => {
-
-      let lib = answers.lib,
-        selectList = ['jquery', 'lodash', 'mustache'],
-        listLen = selectList.length,
-        i;
+    return this.prompt(userInput).then(data => {
+      let lib = data.lib;
 
       function hasLib(name) {
         return lib.join().indexOf(name) !== -1;
       }
-      this.name = answers.name;
-      this.author = answers.author;
-      this.email = answers.email;
-      this.version = answers.version;
+      this.name = data.name;
+      this.author = data.author;
+      this.email = data.email;
+      this.version = data.version;
+      this.cmsMenu = data.cmsMenu;
       this.time = dateformat(new Date(), "yyyy/mm/dd HH:MM:ss");
-      this.isMobile = answers.isMobile;
 
-      this.jquery = hasLib('jquery');
-      this.lodash = hasLib('lodash');
-      this.mustache = hasLib('mustache');
-      this.hasLibs = false;
-
-      for (i = 0; i < listLen; i++) {
-        if (hasLib(selectList[i])) {
-          this.hasLibs = true;
-        }
-      }
+      this.geo = hasLib('geo');
+      this.swiper = hasLib('swiper');
     });
   }
 
@@ -161,7 +149,12 @@ module.exports = class extends Generator {
 
     mkdirp('src/fonts');
     mkdirp('src/images');
+    mkdirp('cmsDist/cmsWeb/suning/' + this.cmsMenu + '/wap/' + this.name);
+    mkdirp('cmsDist/data/' + this.cmsMenu);
+    mkdirp('cmsDist/model/' + this.cmsMenu);
+    mkdirp('cmsDist/templates/' + this.cmsMenu + '/wap/' + this.name);
   }
+
   install() {
 
     let _this = this;
@@ -176,10 +169,11 @@ module.exports = class extends Generator {
       });
     }
   }
+
   end() {
     if (this.notEmpty) return;
     this.log(chalk.green('############'));
     this.log(chalk.green('INIT DONE'));
     this.log(chalk.green('############'));
   }
-}
+};
